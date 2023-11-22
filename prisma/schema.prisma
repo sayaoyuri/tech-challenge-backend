@@ -11,7 +11,7 @@ model Carrier {
   id        String     @id @default(uuid())
   cnpj      String     @unique @db.VarChar(14)
   fantasia  String     @db.VarChar(70)
-  Tracking  Tracking[]
+  trackings Tracking[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 
@@ -20,10 +20,10 @@ model Carrier {
 
 model Customer {
   id        String     @id @default(uuid())
-  cpf       String     @unique @db.VarChar(11)
-  nome      String     @db.VarChar(50)
-  Address   Address[]
-  Tracking  Tracking[]
+  cpf       String     @unique
+  name      String     @db.VarChar(50)
+  addresses Address[]
+  trackings Tracking[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 
@@ -33,49 +33,25 @@ model Customer {
 model Address {
   id         String     @id @default(uuid())
   customerId String
-  Customer   Customer   @relation(fields: [customerId], references: [id])
+  customer   Customer   @relation(fields: [customerId], references: [id])
   cep        String     @db.VarChar(9)
-  pais       String     @db.VarChar(50)
-  estado     String     @db.VarChar(50)
-  endereco   String     @db.VarChar(70)
-  Tracking   Tracking[]
+  country    String     @db.VarChar(50)
+  state      String     @db.VarChar(50)
+  street     String     @db.VarChar(70)
+  trackings  Tracking[]
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
 
   @@map("addresses")
 }
 
-model Tracking {
-  id             String           @id @default(uuid())
-  customerId     String
-  Customer       Customer         @relation(fields: [customerId], references: [id])
-  addressId      String
-  Address        Address          @relation(fields: [addressId], references: [id])
-  carrierId      String
-  Carrier        Carrier          @relation(fields: [carrierId], references: [id])
-  volumes        Int
-  remetente      String           @db.VarChar(50)
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  TrackingStatus TrackingStatus[]
-
-  @@map("trackings")
-}
-
-// enum StatusMessage {
-//   ENTREGA_CRIADA
-//   EM_TRANSITO
-//   CHEGADA_CIDADE_DESTINO
-//   SAIU_PARA_ENTREGA
-//   ENTREGA_REALIZADA
-// }
 model StatusMessage {
   id             String           @id @default(uuid())
   message        String           @db.VarChar(50)
   date           DateTime         @default(now())
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
-  TrackingStatus TrackingStatus[]
+  trackingStatus TrackingStatus[]
 
   @@map("status_message")
 }
@@ -83,11 +59,28 @@ model StatusMessage {
 model TrackingStatus {
   id            String        @id @default(uuid())
   trackingId    String
-  Tracking      Tracking      @relation(fields: [trackingId], references: [id])
+  tracking      Tracking      @relation(fields: [trackingId], references: [id])
   messageId     String
-  StatusMessage StatusMessage @relation(fields: [messageId], references: [id])
+  statusMessage StatusMessage @relation(fields: [messageId], references: [id])
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
   @@map("tracking_status")
+}
+
+model Tracking {
+  id             String           @id @default(uuid())
+  customerId     String
+  customer       Customer         @relation(fields: [customerId], references: [id])
+  addressId      String
+  address        Address          @relation(fields: [addressId], references: [id])
+  carrierId      String
+  carrier        Carrier          @relation(fields: [carrierId], references: [id])
+  volume         Int
+  shipper        String           @db.VarChar(70)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  trackingStatus TrackingStatus[]
+
+  @@map("trackings")
 }
