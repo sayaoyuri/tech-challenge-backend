@@ -18,9 +18,20 @@ model Carrier {
   @@map("carriers")
 }
 
+model Shipper {
+  id        String     @id @default(uuid())
+  cnpj      String?    @unique @db.VarChar(14)
+  fantasia  String     @db.VarChar(70)
+  trackings Tracking[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@map("shippers")
+}
+
 model Customer {
   id        String     @id @default(uuid())
-  cpf       String     @unique
+  cpf       String     @unique @db.VarChar(11)
   name      String     @db.VarChar(50)
   addresses Address[]
   trackings Tracking[]
@@ -45,25 +56,22 @@ model Address {
   @@map("addresses")
 }
 
-model StatusMessage {
-  id             String           @id @default(uuid())
-  message        String           @db.VarChar(50)
-  date           DateTime         @default(now())
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  trackingStatus TrackingStatus[]
-
-  @@map("status_message")
+enum StatusMessage {
+  ENTREGA_CRIADA
+  EM_TRANSITO
+  CHEGOU_A_CIDADE_DE_DESTINO
+  SAIU_PARA_ENTREGA
+  ENTREGA_REALIZADA
 }
 
 model TrackingStatus {
-  id            String        @id @default(uuid())
-  trackingId    String
-  tracking      Tracking      @relation(fields: [trackingId], references: [id])
-  messageId     String
-  statusMessage StatusMessage @relation(fields: [messageId], references: [id])
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id         String        @id @default(uuid())
+  trackingId String
+  tracking   Tracking      @relation(fields: [trackingId], references: [id])
+  message    StatusMessage
+  date       DateTime      @default(now())
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
 
   @@map("tracking_status")
 }
@@ -76,8 +84,9 @@ model Tracking {
   address        Address          @relation(fields: [addressId], references: [id])
   carrierId      String
   carrier        Carrier          @relation(fields: [carrierId], references: [id])
+  shipperId      String
+  shipper        Shipper          @relation(fields: [shipperId], references: [id])
   volume         Int
-  shipper        String           @db.VarChar(70)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   trackingStatus TrackingStatus[]
