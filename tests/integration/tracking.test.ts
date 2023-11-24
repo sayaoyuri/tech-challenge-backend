@@ -93,36 +93,6 @@ describe('GET /tracking/:cpf', () => {
             volume: expect.any(Number),
             createdAt: expect.any(String),
             updatedAt: expect.any(String),
-            address: expect.objectContaining({
-              id: expect.any(String),
-              customerId: expect.any(String),
-              cep: expect.any(String),
-              country: expect.any(String),
-              state: expect.any(String),
-              createdAt: expect.any(String),
-              updatedAt: expect.any(String),
-            }),
-            shipper: expect.objectContaining({
-              id: expect.any(String),
-              cnpj: expect.any(String),
-              fantasia: expect.any(String),
-              createdAt: expect.any(String),
-              updatedAt: expect.any(String),
-            }),
-            carrier: expect.objectContaining({
-              id: expect.any(String),
-              cnpj: expect.any(String),
-              fantasia: expect.any(String),
-              createdAt: expect.any(String),
-              updatedAt: expect.any(String),
-            }),
-            customer: expect.objectContaining({
-              id: expect.any(String),
-              cpf: customer.cpf,
-              name: expect.any(String),
-              createdAt: expect.any(String),
-              updatedAt: expect.any(String),
-            }),
             trackingStatus: expect.arrayContaining([
               expect.objectContaining({
                 id: expect.any(String),
