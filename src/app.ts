@@ -3,12 +3,14 @@ import 'express-async-errors';
 import cors from 'cors';
 import { handleApplicationError } from '@/middlewares';
 import { connectDb, disconnectDB } from '@/config';
+import { trackingRouter } from '@/routers';
 
 const app = express();
 app
   .use(cors())
   .use(express.json())
   .get('/health', (_req: Request, res: Response) => res.send(`I'm up and running!`))
+  .use('/tracking', trackingRouter)
   .use(handleApplicationError);
 
 export function init(): Promise<Express> {
