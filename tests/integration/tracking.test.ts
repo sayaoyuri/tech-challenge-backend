@@ -109,3 +109,95 @@ describe('GET /tracking/:cpf', () => {
     });
   });
 });
+
+describe('GET /tracking/details/:id', () => {
+  describe('FAILURE', () => {
+    it('should respond with status 404 when tracking id does not exist', async () => {
+      const { status, body } = await server.get('/tracking/details/123abc');
+
+      expect(status).toBe(httpStatus.NOT_FOUND);
+      expect(body).toEqual(
+        expect.objectContaining({
+          message: notFoundError('Tracking').message,
+        }),
+      );
+    });
+  });
+
+  describe('SUCCESS', () => {
+    it(`should respond with status 200 & array of customer's detailed trackings`, async () => {
+      const carrier = await createCarrier();
+      const shipper = await createShipper();
+      const customer = await createCustomer();
+      const address = await createAddress(customer.id);
+
+      const trackingObj = {
+        shipperId: shipper.id,
+        carrierId: carrier.id,
+        customerId: customer.id,
+        addressId: address.id,
+        volume: 1,
+      };
+
+      const tracking = await createTracking(trackingObj);
+      await createTrackingStatus(tracking.id);
+      await createTrackingStatus(tracking.id, StatusMessage.ENTREGA_REALIZADA);
+
+      const { status, body } = await server.get(`/tracking/details/${tracking.id}`);
+
+      expect(status).toBe(httpStatus.OK);
+      expect(body).toEqual(
+        expect.objectContaining({
+          id: expect.any(String),
+          shipperId: expect.any(String),
+          carrierId: expect.any(String),
+          customerId: expect.any(String),
+          addressId: expect.any(String),
+          volume: expect.any(Number),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          address: expect.objectContaining({
+            id: expect.any(String),
+            customerId: expect.any(String),
+            cep: expect.any(String),
+            country: expect.any(String),
+            state: expect.any(String),
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+          }),
+          shipper: expect.objectContaining({
+            id: expect.any(String),
+            cnpj: expect.any(String),
+            fantasia: expect.any(String),
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+          }),
+          carrier: expect.objectContaining({
+            id: expect.any(String),
+            cnpj: expect.any(String),
+            fantasia: expect.any(String),
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+          }),
+          customer: expect.objectContaining({
+            id: expect.any(String),
+            cpf: customer.cpf,
+            name: expect.any(String),
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+          }),
+          trackingStatus: expect.arrayContaining([
+            expect.objectContaining({
+              id: expect.any(String),
+              trackingId: expect.any(String),
+              message: expect.any(String),
+              date: expect.any(String),
+              createdAt: expect.any(String),
+              updatedAt: expect.any(String),
+            }),
+          ]),
+        }),
+      );
+    });
+  });
+});
