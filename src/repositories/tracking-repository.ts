@@ -1,5 +1,22 @@
 import { prisma } from '@/config';
 
+async function findById(id: string) {
+  return await prisma.tracking.findUnique({
+    where: { id },
+    include: {
+      address: true,
+      carrier: true,
+      customer: true,
+      shipper: true,
+      trackingStatus: {
+        orderBy: {
+          date: 'asc',
+        },
+      },
+    },
+  });
+}
+
 async function findByCustomerId(customerId: string) {
   return await prisma.tracking.findMany({
     where: { customerId },
@@ -14,4 +31,4 @@ async function findByCustomerId(customerId: string) {
   });
 }
 
-export const trackingRepository = { findByCustomerId };
+export const trackingRepository = { findById, findByCustomerId };

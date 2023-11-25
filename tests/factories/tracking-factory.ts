@@ -1,7 +1,7 @@
-import { prisma } from '@/config';
-import { InputTrackingBody } from '@/protocols';
 import { faker } from '@faker-js/faker';
 import { StatusMessage, Tracking, TrackingStatus } from '@prisma/client';
+import { prisma } from '@/config';
+import { InputTrackingBody } from '@/protocols';
 
 export async function createTracking(tracking: InputTrackingBody) {
   const { shipperId, carrierId, customerId, addressId, volume } = tracking;
@@ -35,7 +35,7 @@ export function mockTracking(): Tracking & { trackingStatus: TrackingStatus[] } 
         message: StatusMessage.ENTREGA_CRIADA,
         date: faker.date.recent(),
         createdAt: faker.date.recent(),
-        updatedAt: faker.date.recent()
+        updatedAt: faker.date.recent(),
       },
     ],
   };

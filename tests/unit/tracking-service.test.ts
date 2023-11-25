@@ -1,5 +1,5 @@
 import { Customer } from '@prisma/client';
-import {  mockCpf, mockCustomer, mockTracking } from '../factories';
+import { mockCpf, mockCustomer, mockTracking } from '../factories';
 import { customerService, trackingService } from '@/services';
 import { trackingRepository } from '@/repositories';
 
@@ -11,12 +11,12 @@ describe('findByCustomerCpf', () => {
       return mockCustomer(cpf);
     });
 
-    jest.spyOn(trackingRepository, 'findByCustomerId').mockImplementation(async (): Promise<any> => {
+    jest.spyOn(trackingRepository, 'findByCustomerId').mockImplementation(async (): Promise<[]> => {
       return [];
     });
 
     const result = trackingService.findByCustomerCpf(cpf);
-    
+
     expect(result).resolves.toEqual([]);
   });
 
@@ -28,10 +28,9 @@ describe('findByCustomerCpf', () => {
       return mockCustomer(cpf);
     });
 
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     jest.spyOn(trackingRepository, 'findByCustomerId').mockImplementation(async (): Promise<any> => {
-      return [
-        trackingMock
-      ];
+      return [trackingMock];
     });
 
     const result = trackingService.findByCustomerCpf(cpf);

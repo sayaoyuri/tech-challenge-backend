@@ -1,3 +1,4 @@
+import { notFoundError } from '@/errors';
 import { trackingRepository } from '@/repositories';
 import { customerService } from '@/services';
 
@@ -9,4 +10,11 @@ async function findByCustomerCpf(cpf: string) {
   return trackings;
 }
 
-export const trackingService = { findByCustomerCpf };
+async function findById(id: string) {
+  const tracking = await trackingRepository.findById(id);
+  if (!tracking) throw notFoundError('Tracking');
+
+  return tracking;
+}
+
+export const trackingService = { findById, findByCustomerCpf };
