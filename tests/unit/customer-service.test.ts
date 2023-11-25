@@ -39,6 +39,6 @@ describe('validateCpfLength', () => {
   });
 
   it('should throw invalidDataError when cpf length differs from 11', () => {
-    expect(() => customerService.validateCpfLength('1234')).toThrow(invalidDataError('CPF length must be 11!'))
+    expect(() => customerService.validateCpfLength('1234')).toThrow(invalidDataError('CPF length must be 11!'));
   });
 });

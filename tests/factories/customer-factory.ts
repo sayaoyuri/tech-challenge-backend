@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { prisma } from '@/config';
 import { Customer } from '@prisma/client';
+import { prisma } from '@/config';
 
 export async function createCustomer(): Promise<Customer> {
   return await prisma.customer.create({
@@ -11,7 +11,7 @@ export async function createCustomer(): Promise<Customer> {
   });
 }
 
-export function mockCpf(): string{
+export function mockCpf(): string {
   return faker.string.numeric({ length: 11 });
 }
 
@@ -23,4 +23,4 @@ export function mockCustomer(incomingCpf?: string): Customer {
     createdAt: faker.date.past(),
     updatedAt: faker.date.recent(),
   };
-};
+}
