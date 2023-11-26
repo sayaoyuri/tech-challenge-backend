@@ -1,6 +1,6 @@
 # Technical Challenge - Backend API
 
-Technical challenge made in interest of BRUDAM's developer position.
+Technical challenge made in interest of a professional software developer position.
 
 ## Deploy
 Production API URL: https://tech-challenge-api.onrender.com/
