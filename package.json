@@ -1,7 +1,7 @@
 {
-  "name": "express-ts-api-template",
+  "name": "tech-challenge",
   "version": "1.0.0",
-  "description": "",
+  "description": "technicall challenge API made in interest of a professional developer position",
   "main": "./dist/src/server.js",
   "scripts": {
     "precommit": "lint-staged",
