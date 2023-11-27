@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "StatusMessage" ADD VALUE 'CHEGOU_A_FILIAL_DA_CIDADE';

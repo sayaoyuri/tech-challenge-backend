@@ -7,7 +7,7 @@
     "precommit": "lint-staged",
     "build": "tsc && tsc-alias -p tsconfig.build.json",
     "migration:prod": "prisma migrate deploy",
-    "start": "npm run migration:prod && node ./dist/src/server.js",
+    "start": "npm run migration:prod && npx prisma db seed && node ./dist/src/server.js",
     "dev:load-env": "dotenv -e .env.development",
     "test:load-env": "dotenv -e .env.test",
     "dev:migration:run": "npm run dev:load-env prisma migrate deploy",
@@ -19,6 +19,9 @@
     "test:coverage": "npm run test -- --coverage",
     "lint": "eslint .",
     "prepare": "husky install"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],
   "author": "sayaoyuri",
